@@ -7,9 +7,15 @@ const About = () => {
 
   return (
     <div>
-      <h1>This is About Page</h1>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet, nisi facilis? Quam saepe labore minus eos repellendus. Repellat aliquid quos mollitia unde tenetur, ab repudiandae aperiam perferendis! Ea, laborum iure!</p>
-      <h3>heading 3 section part aded</h3>
+      <h4>This is navbar Pages and Component</h4>
+
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eum pariatur
+        blanditiis, nobis unde hic consequuntur velit deserunt cum tenetur
+        reiciendis labore magni, animi ratione voluptas dignissimos, quam
+        necessitatibus provident minima.
+      </p>
+
       <div className="p-10">
         <h1>Global Counter is {count}</h1>
         <button onClick={increment}>Increase</button>
