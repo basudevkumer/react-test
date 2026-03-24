@@ -1,16 +1,14 @@
 import React from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
-import Home from "./page/Home";
-import About from "./page/About";
-
+import allProcuct from "./component/axios/sub";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Logic from "../src/component/LogicTest";
 const App = () => {
+  const queryClient = new QueryClient();
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="/about" element={<About />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <Logic />
+    </QueryClientProvider>
   );
 };
 
