@@ -3,55 +3,58 @@ import useAllProduct from "./useAllProduct";
 import Cart from "./cart";
 
 const LogicTest = () => {
-  const [categoryItems, setCategoryItems] = useState("");
+  const [hasBrand, setHasBrand] = useState([]);
+
   const { data, isLoading, isError } = useAllProduct();
 
-  const categoryFilter = useMemo(() => {
-    if (!data) {
-      return [];
-    }
+  const filterByBrand = useMemo(() => {
+    if (!data) return [];
 
-    if (categoryItems === "all" || categoryItems === "") {
+    if (hasBrand.length === 0) {
       return data;
     }
-    const filteredProduct = data?.filter(
-      (items) => items.category === categoryItems,
-    );
 
-    return filteredProduct;
-  }, [categoryItems, data]);
+    const filteredData = data?.filter((items) => {
+      return hasBrand.includes(items?.brand);
+    });
 
-  console.log(categoryFilter);
+    return filteredData;
+  }, [hasBrand, data]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const brand = [
+    ...new Set(data?.map((items) => items?.brand)?.filter(Boolean)),
+  ];
 
-  const handleClicked = (value) => {
-    setCategoryItems(value);
+  const handleChange = (e) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setHasBrand((prev) => [...prev, value]);
+    } else {
+      setHasBrand((prev) => prev?.filter((items) => items !== value));
+    }
   };
 
   return (
     <div className="max-w-[1320px] mx-auto my-15">
       <div className="grid grid-cols-4 gap-x-5">
-        <div className="flex  items-start  flex-col gap-5">
-          <button onClick={() => handleClicked("all")}>All</button>
-          {[...new Set(data?.map((items) => items?.category))]?.map(
-            (items, index) => {
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleClicked(items)}
-                  className="cursor-pointer"
-                >
-                  {items}
-                </button>
-              );
-            },
-          )}
+        <div className="flex  items-start  flex-col gap-3">
+          {brand?.map((items, index) => {
+            return (
+              <label key={index} className="flex gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  value={items}
+                  onChange={handleChange}
+                  checked={hasBrand.includes(items)}
+                />
+                {items}
+              </label>
+            );
+          })}
         </div>
         <div className="grid grid-cols-3 gap-8 col-span-3">
-          {categoryFilter?.map((items, index) => {
+          {filterByBrand?.map((items, index) => {
             return (
               <Cart key={index} img={items?.thumbnail} title={items?.title} />
             );
