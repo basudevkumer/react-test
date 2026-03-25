@@ -1,72 +1,77 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import useAllProduct from "./useAllProduct";
 import Cart from "./cart";
-import { number } from "zod";
 
 const LogicTest = () => {
-  const [discount, setDiscount] = useState([]);
-
-  const discountRanges = [
-    { label: "0%-10%", value: "0-10" },
-    { label: "11%-20%", value: "11-20" },
-    { label: "21%-30%", value: "21-30" },
-    { label: "31%-40%", value: "31-40" },
-    { label: "41%-50%", value: "41-50" },
-    { label: "51% or more", value: "51-100" },
-  ];
-
   const { data, isLoading, isError } = useAllProduct();
 
-  const handleChages = (e) => {
-    let { checked, value } = e.target;
+  const [search, setSearch] = useState("");
+  const [debouncedValue, setDebouncedValue] = useState("");
+  const [triger, setTrgier] = useState("");
 
-    if (checked) {
-      setDiscount((prev) => [...prev, value]);
-    } else {
-      setDiscount((prev) => prev.filter((items) => value !== items));
+  const handleClicked = () => {
+    setTrgier(debouncedValue);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setTrgier(debouncedValue);
     }
   };
 
-  const filterRange = useMemo(() => {
-    if (!data) return [];
-    if (discount.length === 0) return data;
+  const searchFilteredData = useMemo(() => {
+    if (!triger.trim()) return null;
 
-    // const [min, max] = discount.split("-").map((items) => items);
-    const ranger = discount.map((items) => {
-      const [min, max] = items.split("-").map(Number);
-      return { min, max };
+    const keyword = triger.split(" ").filter(Boolean);
+
+    const f = data?.filter((items) => {
+      const text = `
+      ${items?.title}
+      ${items?.description}
+      ${items?.category}
+      ${items?.brand}
+      ${items?.tags?.join(" ")}
+    `.toLowerCase();
+
+      return keyword.every((k) => text.includes(k.toLocaleLowerCase()));
     });
 
-    const discountFilter = data?.filter((items) => {
-      return ranger.some((r) => {
-        return (
-          items.discountPercentage > r.min && items.discountPercentage < r.max
-        );
-      });
-    });
+    console.log(f);
+  }, [triger, data]);
 
-    return discountFilter;
-    
-  }, [discount, data]);
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedValue(search);
+    }, 1000);
+
+    return () => clearTimeout(timeoutId); // cleanup previous timeout
+  }, [search]);
+
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+  };
 
   return (
     <div className="max-w-[1320px] mx-auto my-15">
       <div className="grid grid-cols-4 gap-x-5">
         <div className="flex items-start flex-col gap-3">
-          {discountRanges.map((range) => (
-            <label key={range.value} className="flex gap-x-3 cursor-pointer">
-              <input
-                type="checkbox"
-                value={range.value}
-                onChange={handleChages}
-                checked={discount.includes(range.value)}
-              />
-              {range.label}
-            </label>
-          ))}
+          <div className="flex gap-x-2">
+            <input
+              type="text"
+              className="p-2 border  rounded"
+              onChange={handleChange}
+              onKeyDown={handleKeyDown}
+            />
+            <button
+              className="px-4 py-2 bg-red-500 rounded text-white cursor-pointer "
+              onClick={handleClicked}
+            >
+              Search
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-3 gap-8 col-span-3">
-          {filterRange?.map((items, index) => {
+          {data?.map((items, index) => {
             return (
               <Cart key={index} img={items?.thumbnail} title={items?.title} />
             );
