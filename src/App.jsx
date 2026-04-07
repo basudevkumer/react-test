@@ -1,27 +1,24 @@
 import React, { useState } from "react";
 
 const App = () => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  // const [fullName, setFullName] = useState(""); its a wrong approach
-  const fullName = firstName + " " + lastName; // good approach
-  return (
-    <div className="p-10">
-      <input
-        type="text"
-        className="border"
-        placeholder="first name"
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <input
-        type="text"
-        className="border"
-        placeholder="Last name"
-        onChange={(e) => setLastName(e.target.value)}
-      />
-      <p className="text-lg px-5">{fullName}</p>
-    </div>
-  );
+  function Child({ count, setCount }) {
+    return (
+      <div>
+        <h3 className="text-xl font-bold ml-5 mb-3">{count}</h3>
+        <button onClick={() => setCount(count + 1)} className="py-2 px-3 bg-rose-500 text-white rounded-lg">Increment</button>
+      </div>
+    );
+  }
+
+  const [count, setCount] = useState(0);
+  return <div className="p-10">
+    <Child count={count} setCount={setCount}/>
+    <Child count={count} setCount={setCount}/>
+    <Child count={count} setCount={setCount}/>
+    <Child count={count} setCount={setCount}/>
+    <Child count={count} setCount={setCount}/>
+    <Child count={count} setCount={setCount}/>
+  </div>;
 };
 
 export default App;
