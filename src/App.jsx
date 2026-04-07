@@ -1,30 +1,13 @@
-import React, { useReducer } from "react";
-
-const initialState = { count: 0 };
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "increment":
-      return { count: state.count + 1 };
-
-    case "decrement":
-      return { count: state.count - 1 };
-
-    default:
-      return state;
-  }
-}
+import React, { useState } from "react";
+import { UserContext } from "./useContexts/useContext";
+import Clind from "./component/Clind";
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [user, setUser] = useState("BK ROy");
   return (
-    <div>
-      <h1>{state.count}</h1>
-
-      <button onClick={() => dispatch({ type: "increment" })}>+</button>
-
-      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
-    </div>
+    <UserContext.Provider value={{ user, setUser }}>
+      <Clind/>
+    </UserContext.Provider>
   );
 };
 
