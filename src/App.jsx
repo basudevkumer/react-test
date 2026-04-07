@@ -1,14 +1,13 @@
-import React from "react";
-import allProcuct from "./component/axios/sub";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import Logic from "../src/component/LogicTest";
-const App = () => {
-  const queryClient = new QueryClient();
+import React, { useState } from "react";
 
+const App = () => {
+  const [status, setStatus] = useState("idle");
   return (
-    <QueryClientProvider client={queryClient}>
-      <Logic />
-    </QueryClientProvider>
+    <div>
+      <p className="text-lg px-5">{status}</p>
+      <button onClick={() => setStatus("Success")} className="px-3 py-1.5 border ">success</button>
+      <button onClick={() => setStatus("Start")} className="px-3 py-1.5 border ml-3">Start</button>
+    </div>
   );
 };
 
