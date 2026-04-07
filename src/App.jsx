@@ -1,25 +1,29 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
+
+const initialState = { count: 0 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return { count: state.count + 1 };
+
+    case "decrement":
+      return { count: state.count - 1 };
+
+    default:
+      return state;
+  }
+}
 
 const App = () => {
-  const [user, setUser] = useState("User 1");
-
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <div className="p-10">
-      <h1 className="text-2xl fomt-medium">{user}</h1>
-      <button
-        className="bg-pink-500 px-3 py-2 rounded-lg"
-        onClick={(e) => setUser("User 1")}
-      >
-        User 1
-      </button>
-      <button
-        className="bg-pink-500 px-3 py-2 rounded-lg"
-        onClick={(e) => setUser("User 2")}
-      >
-        User 2
-      </button>
+    <div>
+      <h1>{state.count}</h1>
 
-      <input type="text" key={user} className="border" />
+      <button onClick={() => dispatch({ type: "increment" })}>+</button>
+
+      <button onClick={() => dispatch({ type: "decrement" })}>-</button>
     </div>
   );
 };
